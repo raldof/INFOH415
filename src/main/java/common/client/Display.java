@@ -1,4 +1,5 @@
 package common.client;
+import common.Frame;
 import common.object.User;
 import java.util.Scanner;
 
@@ -24,8 +25,8 @@ public class Display {
         String answer = userInput.next();
 
         while (!(answer.equals("Y") || answer.equals("N"))){
-                System.out.println("Access to the app ?[Y/N]");
-                answer = userInput.next();
+            System.out.println("Access to the app ?[Y/N]");
+            answer = userInput.next();
         }
 
         if (answer.equals("Y")){
@@ -43,6 +44,7 @@ public class Display {
     }
 
     public void createSession(User user){
-        // Call gui
+        Frame frame= new Frame(user);
+        frame.startGui();
     }
 }

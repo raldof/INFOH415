@@ -12,9 +12,11 @@ import java.time.LocalDateTime;
 
 public class Panel extends JPanel {
     private Message[] messagesToPrint={};
+    public User user;
     private JTextField textField;
     private JButton sendButton;
-    public Panel(){
+    public Panel(User user){
+        this.user = user;
         this.textField=new JTextField();
         this.setLayout(null);
         this.textField.setLocation(200,700);
@@ -32,7 +34,7 @@ public class Panel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(textField.getText().length()>1) {
-                    PlaceHolder.sendMessage(new Message(textField.getText(), new User("User", "test"), LocalDateTime.now()));
+                    PlaceHolder.sendMessage(new Message(textField.getText(), user, LocalDateTime.now()));
                     System.out.println("text sent");
                     textField.setText("");
                 }
@@ -51,12 +53,12 @@ public class Panel extends JPanel {
         g.setFont(new Font("Arial",Font.PLAIN,20));
         if(messagesToPrint.length>0){
             Message[] tmpMessage=messagesToPrint;
-        for(int i = tmpMessage.length-1;i>=0;i--){
-            g.setColor(tmpMessage[i].getUser().getColor());
-            g.drawString(tmpMessage[i].getUser().getName(),200,690-(i*20));
-            g.setColor(Color.WHITE);
-            g.drawString(" : "+ tmpMessage[i].getMessage(),300,690-(i*20));
-        }
+            for(int i = tmpMessage.length-1;i>=0;i--){
+                g.setColor(tmpMessage[i].getUser().getColor());
+                g.drawString(tmpMessage[i].getUser().getName(),200,690-(i*20));
+                g.setColor(Color.WHITE);
+                g.drawString(" : "+ tmpMessage[i].getMessage(),300,690-(i*20));
+            }
         }
 
     }

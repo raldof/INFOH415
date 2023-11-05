@@ -11,15 +11,17 @@ import java.util.Collection;
 import java.util.Collections;
 
 public class Frame extends JFrame {
-    private Panel panel=new Panel();
-    private Thread t=new Thread(new ReceiverThread(this));
-    public Frame(){
+    private Panel panel;
+
+    private Thread t = new Thread(new ReceiverThread(this));
+    public Frame(User user){
         this.setVisible(false);
         this.setSize(1280,800);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
+        this.panel = new Panel(user);
         this.setContentPane(panel);
-
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
     public void startGui(){
         this.setVisible(true);
@@ -30,8 +32,8 @@ public class Frame extends JFrame {
     }
     public void receiveMessage(){
         Message[] messages=PlaceHolder.receiveMessage();
-        if(messages.length>30){
-            messages= Arrays.copyOfRange(messages,messages.length-1-30,messages.length-1);
+        if(messages.length>31){
+            messages= Arrays.copyOfRange(messages,messages.length-32,messages.length);
 
         }
         Collections.reverse(Arrays.asList(messages));
@@ -41,7 +43,7 @@ public class Frame extends JFrame {
 
 }
 class ReceiverThread implements Runnable{
-    private boolean running=true;
+    private boolean running = true;
     private Frame listener;
     public ReceiverThread(Frame frame){
         listener=frame;
