@@ -41,44 +41,66 @@ public class FirebaseConnection {
         ref = database.getReference();
     }
 
+
+
+
+
     public int authentification(String username, String password){
-        DatabaseReference userRef = ref.child("User");
-        Query query = userRef.orderByChild("name").equalTo(username);
-        int[] result = {0};
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        int result[] = {0};
+        final boolean[] userExists = {false};
+
+        DatabaseReference usersRef = ref.child("Users");
+
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    // Récupération des données de l'utilisateur
-                    String motDePasse = snapshot.child("password").getValue(String.class);
-                    if (motDePasse.equals(password)){
-                        result[0] = 0;
-                    }
-                    else {
-                        result[0] = 1;
-                    }
-                }
-            }
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot child : dataSnapshot.getChildren()) {
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Gestion des erreurs
-                if (error != null){
-                    System.err.println("Erreur : " + error.getMessage());
+                        if (child.getKey().equals(username)) {
+                            userExists[0] = true;
+                            if (child.getValue() == password){
+                                System.out.println("Mot de passe est bon");
+                                result[0] = 0;
+
+                            }else {
+                                System.out.println("Mot de passe est mauvais");
+                                result[0] = 1;
+                            }
+                        }
+                    }
                 } else {
+                    System.out.println("La base de données est vide.");
                     result[0] = 2;
-                    User user = new User(username, password);
-                    userRef.setValue(user, (error1, ref1) -> {
-                        if (error1 != null) {
-                            System.out.println("Data could not be saved " + error1.getMessage());
+                }
+                System.out.println(userExists[0]);
+                if (!userExists[0]){
+                    result[0] = 2;
+                    Map<String, Object> users = new HashMap<>();
+                    users.put(username, password);
+                    usersRef.updateChildren(users, (error, ref1) -> {
+                        if (error != null) {
+                            System.out.println("Data could not be saved " + error.getMessage());
                         } else {
                             System.out.println("Data saved successfully.");
                         }
                     });
-                }
+                }latch.countDown();
+            }
 
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Erreur lors de la vérification de l'utilisateur : " + databaseError.getMessage());
             }
         });
+
+        try {
+            latch.await(); // Wait for countdown
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        System.out.println("return");
         return result[0];
     }
 

@@ -41,8 +41,8 @@ public class Display {
 
     public int auth(String username, String password){
         // Need to verify if the username already exist or not; if exist: 0, if wrong password: 1, if user does not exist: 2
-
-        int result = firebaseConnection.authentification(username, password);
+        int result = 1;
+        result = firebaseConnection.authentification(username, password);
         System.out.println(result);
 
 
