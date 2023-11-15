@@ -45,7 +45,6 @@ public class Display {
         result = firebaseConnection.authentification(username, password);
         System.out.println(result);
 
-
         int returnValue = -1;
         return 2; // default value because not DB
     }

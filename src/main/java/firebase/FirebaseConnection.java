@@ -58,20 +58,24 @@ public class FirebaseConnection {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
                         if (child.getKey().equals(username)) {
                             userExists[0] = true;
-                            if (child.getValue() == password){
+                            if (child.getValue().equals(password)){
                                 System.out.println("Mot de passe est bon");
                                 result[0] = 0;
                             }else {
-                                System.out.println("Mot de passe est mauvais");
                                 result[0] = 1;
+                                System.out.println(password + " != " + child.getValue());
                             }
+                            latch.countDown();
+                            break;
                         }
+
                     }
+                    latch.countDown();
                 } else {
-                    System.out.println("La base de données est vide.");
                     result[0] = 2;
-                }
+                }latch.countDown();
                 if (!userExists[0]){
+                    System.out.println("Creating a new account");
                     result[0] = 2;
                     Map<String, Object> users = new HashMap<>();
                     users.put(username, password);
@@ -96,7 +100,6 @@ public class FirebaseConnection {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("return");
         return result[0];
     }
 
