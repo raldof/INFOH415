@@ -56,13 +56,11 @@ public class FirebaseConnection {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
-
                         if (child.getKey().equals(username)) {
                             userExists[0] = true;
                             if (child.getValue() == password){
                                 System.out.println("Mot de passe est bon");
                                 result[0] = 0;
-
                             }else {
                                 System.out.println("Mot de passe est mauvais");
                                 result[0] = 1;
@@ -73,7 +71,6 @@ public class FirebaseConnection {
                     System.out.println("La base de données est vide.");
                     result[0] = 2;
                 }
-                System.out.println(userExists[0]);
                 if (!userExists[0]){
                     result[0] = 2;
                     Map<String, Object> users = new HashMap<>();
@@ -87,7 +84,6 @@ public class FirebaseConnection {
                     });
                 }latch.countDown();
             }
-
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
