@@ -1,18 +1,25 @@
 package firebase.object;
+import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class Message {
+public class Message  {
+
+    public static int counter = 0;
 
     private String message;
-    private User user;
-    private LocalDateTime date;
 
-    public Message(String message, User user, LocalDateTime date) {
+    private User user;
+
+    private String date;
+
+    public Message(String message, User user, String date) {
         this.message = message;
         this.user = user;
         this.date = date;
     }
+
 
     public String getMessage() {
         return message;
@@ -30,11 +37,13 @@ public class Message {
         this.user = user;
     }
 
-    public LocalDateTime getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    @Override
+    public String toString() {
+        return message + user.toString() + date;
     }
+
 }

@@ -1,5 +1,6 @@
 package firebase;
 
+import firebase.client.Display;
 import firebase.object.Message;
 import firebase.object.PlaceHolder;
 import firebase.object.User;
@@ -13,25 +14,26 @@ import java.util.Collections;
 public class Frame extends JFrame {
     private Panel panel;
 
-    private Thread t = new Thread(new ReceiverThread(this));
+    private ReceiverThread t = new ReceiverThread(this);
     public Frame(User user){
         this.setVisible(false);
         this.setSize(1280,800);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.panel = new Panel(user);
+        this.panel = new Panel(user, this);
         this.setContentPane(panel);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     }
     public void startGui(){
         this.setVisible(true);
         receiveMessage();
-        t.start();
+        Thread th = new Thread(t);
+        th.start();
 
 
     }
     public void receiveMessage(){
-        Message[] messages=PlaceHolder.receiveMessage();
+        Message[] messages= Display.firebaseConnection.receiveMessage();
         if(messages.length>31){
             messages= Arrays.copyOfRange(messages,messages.length-32,messages.length);
 
@@ -41,9 +43,14 @@ public class Frame extends JFrame {
         repaint();
     }
 
+    public void endGui(){
+        t.running = false;
+        dispose();
+    }
+
 }
 class ReceiverThread implements Runnable{
-    private boolean running = true;
+    public boolean running = true;
     private Frame listener;
     public ReceiverThread(Frame frame){
         listener=frame;
@@ -51,6 +58,10 @@ class ReceiverThread implements Runnable{
     @Override
     public void run() {
         while(running){
+            if (!Display.firebaseConnection.isChatRoomOpen()){
+                listener.endGui();
+            }
+
             listener.receiveMessage();
             try {
                 Thread.sleep(10);

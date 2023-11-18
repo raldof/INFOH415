@@ -5,7 +5,7 @@ import firebase.object.User;
 import java.util.Scanner;
 
 public class Display {
-    FirebaseConnection firebaseConnection = new FirebaseConnection();
+    public static FirebaseConnection firebaseConnection = new FirebaseConnection();
 
     public void connexion(){
         System.out.println("Connexion");
@@ -50,6 +50,12 @@ public class Display {
     }
 
     public void createSession(User user){
+        if (firebaseConnection.isChatRoomOpen()){
+            firebaseConnection.joinChatRoom(user);
+        }
+        else{
+            firebaseConnection.openChatRoom(user);
+        }
         Frame frame= new Frame(user);
         frame.startGui();
     }
