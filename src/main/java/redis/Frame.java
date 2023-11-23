@@ -1,20 +1,19 @@
-package common;
+package redis;
 
-import common.object.Message;
-import common.object.PlaceHolder;
-import common.object.User;
+import redis.Panel;
+import redis.object.Message;
+import redis.object.PlaceHolder;
+import redis.object.User;
+import redis.clients.jedis.JedisPool;
 
 import javax.swing.*;
-import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 
 public class Frame extends JFrame {
     private Panel panel;
-
     private Thread t = new Thread(new ReceiverThread(this));
-    public Frame(User user){
+    public Frame(JedisPool connection, User user){
         this.setVisible(false);
         this.setSize(1280,800);
         this.setLocationRelativeTo(null);

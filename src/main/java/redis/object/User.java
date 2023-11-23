@@ -1,4 +1,4 @@
-package common.object;
+package redis.object;
 
 import java.awt.*;
 import java.util.Random;

@@ -1,6 +1,7 @@
 package redis;
 
-import common.object.User;
+import redis.object.User;
+import redis.*;
 import redis.clients.jedis.*;
 
 import java.time.*;
@@ -35,7 +36,7 @@ public class RedisQuery {
         return jedis.hgetAll("user:"+user);
     }
 
-    public void setUserDB(JedisPool connection,User user){
+    public void setUserDB(JedisPool connection, User user){
         RedisConnection redisConnection =  new RedisConnection();
         Jedis jedis = redisConnection.getResources(connection);
         Map<String,String> hash = new HashMap<>();

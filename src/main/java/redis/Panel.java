@@ -1,8 +1,8 @@
-package common;
+package redis;
 
-import common.object.Message;
-import common.object.PlaceHolder;
-import common.object.User;
+import redis.object.Message;
+import redis.object.PlaceHolder;
+import redis.object.User;
 
 import javax.swing.*;
 import java.awt.*;

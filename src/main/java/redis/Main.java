@@ -1,7 +1,6 @@
-package common;
+package redis;
 
 import common.client.Display;
-import common.object.*;
 
 public class Main {
     public static void main(String[] args) {

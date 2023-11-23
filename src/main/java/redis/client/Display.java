@@ -1,11 +1,12 @@
-package common.client;
-import common.Frame;
-import common.object.User;
+package redis.client;
+
+import redis.*;
+import redis.object.User;
 import redis.RedisConnection;
 import redis.RedisQuery;
 import redis.clients.jedis.JedisPool;
 
-import java.util.*;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Display {
@@ -25,7 +26,7 @@ public class Display {
         if (auth(username, password) == 2){ // case where user does not exist
 
             User user = new User(username, password);
-            //redisQuery.setUserDB(connection,user);
+            redisQuery.setUserDB(connection,user);
             accessToApp(user, userInput);
         }
     }
@@ -51,18 +52,37 @@ public class Display {
         // Need to verify if the username already exist or not; if exist: 0, if wrong password: 1, if user does not exist: 2
         Map<String, String> result = redisQuery.getUserDB(connection, username);
         if(!result.equals(null)){
+
             if(result.get(password).equals(password)){
                 return 0;
-            }else{
+            }
+
+            else{
                 return 1;
             }
-        }else{
+        }
+        else{
+            // User doesn't Exist:
+            createUser();
             return 2;
         }
     }
 
+    public void createUser(){
+        System.out.println("Register, please enter a Username and Password:");
+        Scanner userInput = new Scanner(System.in);
+        System.out.println("Username:");
+        String username = userInput.next();
+        System.out.println("Password:");
+        String password = userInput.next();
+
+        User user = new User(username, password);
+        redisQuery.setUserDB(connection, user);
+    }
+
     public void createSession(User user){
-        Frame frame= new Frame(user);
+
+        Frame frame= new Frame(connection, user);
         frame.startGui();
     }
 

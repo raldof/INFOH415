@@ -1,8 +1,6 @@
-package common.object;
+package redis.object;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class PlaceHolder {
     static ArrayList<Message> messages=new ArrayList<>();
