@@ -8,7 +8,7 @@ import com.google.firebase.database.*;
 import firebase.object.Message;
 import firebase.object.User;
 
-import java.io.FileInputStream;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -138,8 +138,6 @@ public class FirebaseConnection {
         dbMessage.updateChildren(hashMessage,(error, ref1) -> {
             if (error != null) {
                 System.out.println("Data could not be saved " + error.getMessage());
-            } else {
-                System.out.println("Data saved successfully. 33333 ");
             }
         });
 
@@ -170,6 +168,29 @@ public class FirebaseConnection {
         });
     }
 
+
+    public void deleteChatRoom(){
+        latch = new CountDownLatch(1);
+        DatabaseReference childReferenceToDelete2 = ref.child("ChatRoomMessage");
+        childReferenceToDelete2.removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    System.out.println("Échec de la suppression du nœud : " + databaseError.getMessage());
+                } else {
+                    System.out.println("Nœud supprimé avec succès.");
+                }
+                latch.countDown();
+            }
+        });
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void joinChatRoom(User user){
         DatabaseReference dbRef =  ref.child("ChatRoomParticipent");
         HashMap<String, Object> h = new HashMap<>();
@@ -192,8 +213,6 @@ public class FirebaseConnection {
         dbMessage.updateChildren(hashMessage,(error, ref1) -> {
             if (error != null) {
                 System.out.println("Data could not be saved " + error.getMessage());
-            } else {
-                System.out.println("Data saved successfully. 33333 ");
             }
         });
     }
@@ -280,8 +299,10 @@ public class FirebaseConnection {
 
 
 
-        for (int i = 0; i< messages.size() ; i++){
-            messages.set(i, localisationMap.get(listMess.get(i)));
+        for (int i = 0; i < messages.size() ; i++){
+            if (i < listMess.size()){
+                messages.set(i, localisationMap.get(listMess.get(i)));
+            }
         }
 
         latch.countDown();
