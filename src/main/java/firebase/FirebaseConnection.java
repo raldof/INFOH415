@@ -12,10 +12,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
 
 public class FirebaseConnection {
@@ -56,14 +53,18 @@ public class FirebaseConnection {
     public int authentification(String username, String password){
         int result[] = {0};
         final boolean[] userExists = {false};
+        List<String>  listofString = null;
+
 
         DatabaseReference usersRef = ref.child("Users");
+
 
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()) {
                     for (DataSnapshot child : dataSnapshot.getChildren()) {
+
 
                         if (child.getKey().equals(username)) {
                             userExists[0] = true;
@@ -133,7 +134,7 @@ public class FirebaseConnection {
         HashMap<String, Object> hashMessage = new HashMap<>();
         Message message = new Message("ChatRoom Opened", user, LocalDateTime.now().toString());
 
-        hashMessage.put(user.getName() + Message.counter, message);
+        hashMessage.put(user.getName() + "|" +  Message.counter, message);
         dbMessage.updateChildren(hashMessage,(error, ref1) -> {
             if (error != null) {
                 System.out.println("Data could not be saved " + error.getMessage());
@@ -183,10 +184,11 @@ public class FirebaseConnection {
     }
 
     public void sendMessage(Message message){
+
         DatabaseReference dbMessage =  ref.child("ChatRoomMessage");
         HashMap<String, Object> hashMessage = new HashMap<>();
         Message.counter ++;
-        hashMessage.put(message.getUser().getName() + Message.counter, message);
+        hashMessage.put(message.getUser().getName() + "|" + Message.counter, message);
         dbMessage.updateChildren(hashMessage,(error, ref1) -> {
             if (error != null) {
                 System.out.println("Data could not be saved " + error.getMessage());
@@ -223,6 +225,8 @@ public class FirebaseConnection {
     }
 
     public  Message[] receiveMessage(){
+        HashMap<String, Message> localisationMap = new HashMap<>();
+        List<String> listMess = new ArrayList<>();
 
         latch = new CountDownLatch(1);
         messages.clear();
@@ -246,10 +250,11 @@ public class FirebaseConnection {
                     String message = String.valueOf(child.child("message").getValue());
                     String date = String.valueOf(child.child("date").getValue());
 
-
                     Message message1 = new Message(message, user, date);
                     messages.add(message1);
 
+                    listMess.add(child.getKey());
+                    localisationMap.put(child.getKey(), message1);
                 }
                 latch.countDown();
             }
@@ -261,18 +266,27 @@ public class FirebaseConnection {
         });
 
 
+
+
         try {
             latch.await();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
-        Message[] arr=new Message[messages.size()];
+
+        Collections.sort(listMess, Comparator.comparingInt(s -> Integer.parseInt(s.split("\\|")[1])));
+        Message[] arr = new Message[messages.size()];
+
+
+
+        for (int i = 0; i< messages.size() ; i++){
+            messages.set(i, localisationMap.get(listMess.get(i)));
+        }
+
         latch.countDown();
         return messages.toArray(arr);
     }
 
 
-
 }
-
