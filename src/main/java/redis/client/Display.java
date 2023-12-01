@@ -33,8 +33,8 @@ public class Display {
         System.out.println("Access to the app ? [Y/N]");
         String answer = userInput.next();
 
-        while (!(answer.equals("Y") || answer.equals("N")) || answer.equals("X")){
-            System.out.println("Access to the app ?[Y/N]");
+        while (!(answer.equals("Y") || answer.equals("N") || answer.equals("X"))){
+            System.out.println("Access to the app ?[Y/N] or Testing?[X]");
             answer = userInput.next();
         }
 

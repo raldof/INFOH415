@@ -15,6 +15,7 @@ public class Frame extends JFrame {
     private ReceiverThread t = new ReceiverThread(this);
     private JedisPool connection;
     private RedisQuery redisQuery;
+    private User user;
     public Frame(JedisPool connection, User user){
         this.setVisible(false);
         this.setSize(1280,800);
@@ -25,6 +26,7 @@ public class Frame extends JFrame {
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.connection = connection;
         this.redisQuery = new RedisQuery();
+        this.user = user;
     }
     public void startGui(){
         this.setVisible(true);
@@ -32,11 +34,10 @@ public class Frame extends JFrame {
         Thread th = new Thread(t);
         th.start();
 
-
     }
     public void receiveMessage(){
         System.out.println("received");
-        Message[] messages = redisQuery.receiveMesage(connection);
+        Message[] messages = redisQuery.receiveMesage(connection, user);
         if(messages.length>31){
             messages= Arrays.copyOfRange(messages,messages.length-32,messages.length);
 

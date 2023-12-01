@@ -4,39 +4,39 @@ import redis.object.User;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.Random;
 
 public class RedisTest {
-    public JedisPool connection;
-    public Integer messagesNumber = 0;
-    public RedisQuery query;
+    private final JedisPool connection;
+    private Integer messagesNumber = 0;
+    private final RedisQuery query = new RedisQuery();
+    private final User user = createUser();
 
     public RedisTest(JedisPool connection, Integer messagesNumber){
         this.connection = connection;
         this.messagesNumber = messagesNumber;
-        this.query = new RedisQuery();
-        System.out.println(createMessage());
     }
 
     public String createMessage(){
-        byte[] array = new byte[7]; // length is bounded by 7
+        byte[] array = new byte[150]; // length is bounded by 150
         new Random().nextBytes(array);
         return new String(array, StandardCharsets.UTF_8);
     }
 
     public User createUser(){
-        User user = new User("TEST", "admin");
-        return user;
+        return new User("TEST", "admin");
     }
 
     public void sendingMessages(){
-        Integer i = 0;
+        int i = 0;
         while (i < messagesNumber){
-            //this.query.setMessasgeDB(this.connection);
+            String message =createMessage();
+            this.query.setMessasgeDB(this.connection, message, this.user, LocalDateTime.now());
         }
     }
 
     public void receinvingMessages(){
-
+        this.query.receiveMesage(this.connection, this.user);
     }
 }

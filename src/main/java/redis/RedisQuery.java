@@ -14,7 +14,7 @@ public class RedisQuery {
 
     public CountDownLatch latch;
     ArrayList<Message> listMessage = new ArrayList<Message>();
-    public Message[] receiveMesage(JedisPool connection){
+    public Message[] receiveMesage(JedisPool connection, User user){
         latch = new CountDownLatch(1);
         listMessage.clear();
         RedisConnection redisConnection =  new RedisConnection();
@@ -25,8 +25,6 @@ public class RedisQuery {
             for(int i=1;i<=tempMes; i++){
                 message = jedis.hgetAll("message:"+i);
                 Map<String,String> temp = new HashMap<String,String>();
-                temp = jedis.hgetAll("user:"+message.get("user"));
-                User user = new User(temp.get("name"),temp.get("password"));
                 Message tempMessage = new Message(message.get("message"),user,LocalDateTime.parse(message.get("date")),i);
                 listMessage.add(tempMessage);
                 latch.countDown();
