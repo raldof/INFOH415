@@ -1,6 +1,7 @@
 package redis;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.object.Message;
 import redis.object.User;
 
 import java.nio.charset.Charset;
@@ -40,7 +41,7 @@ public class RedisTest {
         }
     }
 
-    public void receinvingMessages(){
-        this.query.receiveMesage(this.connection, this.user);
+    public Message[] receinvingMessages(){
+        return this.query.receiveMesage(this.connection, this.user);
     }
 }

@@ -3,6 +3,7 @@ package redis.client;
 import redis.*;
 import redis.clients.jedis.Jedis;
 import redis.object.User;
+import redis.object.Message;
 import redis.RedisConnection;
 import redis.RedisQuery;
 import redis.clients.jedis.JedisPool;
@@ -49,10 +50,13 @@ public class Display {
             Jedis jedis = connection.getResource();
             RedisTest test = new RedisTest(connection, 100000,jedis);
             System.out.println("Starting sending");
-            test.sendingMessages();
+            //test.sendingMessages();
             System.out.println("Ending sending and receiving");
-            test.receinvingMessages();
-
+            Message[] messages = {};
+            messages = test.receinvingMessages();
+            for(Message m : messages){
+                System.out.println(m.getMessage());
+            }
         }
     }
 
