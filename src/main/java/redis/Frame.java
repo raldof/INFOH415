@@ -12,25 +12,31 @@ import java.util.Collections;
 
 public class Frame extends JFrame {
     private Panel panel;
-    private Thread t = new Thread(new ReceiverThread(this));
+    private ReceiverThread t = new ReceiverThread(this);
+    private JedisPool connection;
+    private RedisQuery redisQuery;
     public Frame(JedisPool connection, User user){
         this.setVisible(false);
         this.setSize(1280,800);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
-        this.panel = new Panel(user);
+        this.panel = new Panel(user,connection);
         this.setContentPane(panel);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        this.connection = connection;
+        this.redisQuery = new RedisQuery();
     }
     public void startGui(){
         this.setVisible(true);
         receiveMessage();
-        t.start();
+        Thread th = new Thread(t);
+        th.start();
 
 
     }
     public void receiveMessage(){
-        Message[] messages=PlaceHolder.receiveMessage();
+        System.out.println("received");
+        Message[] messages = redisQuery.receiveMesage(connection);
         if(messages.length>31){
             messages= Arrays.copyOfRange(messages,messages.length-32,messages.length);
 

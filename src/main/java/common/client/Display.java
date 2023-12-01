@@ -50,7 +50,7 @@ public class Display {
     public int auth(String username, String password){
         // Need to verify if the username already exist or not; if exist: 0, if wrong password: 1, if user does not exist: 2
         Map<String, String> result = redisQuery.getUserDB(connection, username);
-        if(!result.equals(null)){
+        if(result.size() > 0){
             if(result.get(password).equals(password)){
                 return 0;
             }else{

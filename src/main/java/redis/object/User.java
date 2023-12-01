@@ -7,12 +7,18 @@ public class User {
 
     private String name;
     private String password;
+    private int r;
+    private int g;
+    private int b;
 
-    private Color color;
+    //private Color color;
     public User(String name,String password) {
         this.name = name;
+        this.password = password;
         Random rn = new Random();
-        this.color=new Color(rn.nextInt(100,200),rn.nextInt(100,200),rn.nextInt(100,200));
+        this.r = rn.nextInt(100,200);
+        this.g = rn.nextInt(100,200);
+        this.b = rn.nextInt(100,200);
     }
     public String getName() {
         return name;
@@ -30,10 +36,33 @@ public class User {
         this.password = password;
     }
 
-
-    public Color getColor(){
-        return this.color;
+    public int getR() {
+        return r;
     }
+
+    public void setR(int r) {
+        this.r = r;
+    }
+
+    public int getG() {
+        return g;
+    }
+
+    public void setG(int g) {
+        this.g = g;
+    }
+
+    public int getB() {
+        return b;
+    }
+
+    public void setB(int b) {
+        this.b = b;
+    }
+
+    /*public Color getColor(){
+        return this.color;
+    }*/
 
 
 

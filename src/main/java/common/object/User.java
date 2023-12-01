@@ -11,6 +11,7 @@ public class User {
     private Color color;
     public User(String name,String password) {
         this.name = name;
+
         Random rn = new Random();
         this.color=new Color(rn.nextInt(100,200),rn.nextInt(100,200),rn.nextInt(100,200));
     }

@@ -22,9 +22,7 @@ public class Display {
         System.out.println("Password:");
         String password = userInput.next();
 
-
         if (auth(username, password) == 2){ // case where user does not exist
-
             User user = new User(username, password);
             redisQuery.setUserDB(connection,user);
             accessToApp(user, userInput);
@@ -41,7 +39,7 @@ public class Display {
         }
 
         if (answer.equals("Y")){
-            createSession(user);
+            createSession(user, connection);
         }
         else if (answer.equals("N")){
             System.out.println("Exit");
@@ -51,9 +49,12 @@ public class Display {
     public int auth(String username, String password){
         // Need to verify if the username already exist or not; if exist: 0, if wrong password: 1, if user does not exist: 2
         Map<String, String> result = redisQuery.getUserDB(connection, username);
-        if(!result.equals(null)){
-
-            if(result.get(password).equals(password)){
+        System.out.println(result);
+        if(result.size() > 0){
+            if(result.get("password").equals(password)){
+                User u = new User(username,password);
+                Scanner userInput = new Scanner(System.in);
+                accessToApp(u, userInput);
                 return 0;
             }
 
@@ -75,12 +76,13 @@ public class Display {
         String username = userInput.next();
         System.out.println("Password:");
         String password = userInput.next();
-
+        System.out.println(password);
         User user = new User(username, password);
         redisQuery.setUserDB(connection, user);
+
     }
 
-    public void createSession(User user){
+    public void createSession(User user,  JedisPool connection){
 
         Frame frame= new Frame(connection, user);
         frame.startGui();
