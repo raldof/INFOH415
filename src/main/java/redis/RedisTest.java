@@ -1,4 +1,5 @@
 package redis;
+import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.object.User;
 
@@ -12,10 +13,12 @@ public class RedisTest {
     private Integer messagesNumber = 0;
     private final RedisQuery query = new RedisQuery();
     private final User user = createUser();
+    private Jedis jedis;
 
-    public RedisTest(JedisPool connection, Integer messagesNumber){
+    public RedisTest(JedisPool connection, Integer messagesNumber, Jedis jedis){
         this.connection = connection;
         this.messagesNumber = messagesNumber;
+        this.jedis = jedis;
     }
 
     public String createMessage(){
@@ -32,7 +35,8 @@ public class RedisTest {
         int i = 0;
         while (i < messagesNumber){
             String message =createMessage();
-            this.query.setMessasgeDB(this.connection, message, this.user, LocalDateTime.now());
+            this.query.setMessasgeDB(this.connection, message, this.user, LocalDateTime.now(),this.jedis);
+            i++;
         }
     }
 

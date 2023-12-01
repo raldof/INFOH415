@@ -38,7 +38,7 @@ public class Panel extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if(textField.getText().length()>1) {
-                    query.setMessasgeDB(connection,textField.getText(),user,LocalDateTime.now());
+                    query.setMessasgeDB(connection,textField.getText(),user,LocalDateTime.now(),null);
                     textField.setText("");
                 }
             }

@@ -52,16 +52,15 @@ public class RedisQuery {
 
 
     //redis test une nouvelle connexion
-    public void setMessasgeDB(JedisPool connection, String message, User user, LocalDateTime date){
-        RedisConnection redisConnection =  new RedisConnection();
+    public void setMessasgeDB(JedisPool connection, String message, User user, LocalDateTime date,Jedis jedis){
+        /*RedisConnection redisConnection =  new RedisConnection();
         JedisPool tmpPool = redisConnection.getConnectionToDb();
-        Jedis jedis = redisConnection.getResources(tmpPool);
+        Jedis jedis = redisConnection.getResources(tmpPool);*/
         Map<String,String> hash = new HashMap<>();
         hash.put("user",user.getName());
         hash.put("message",message);
         hash.put("date",date.toString());
         jedis.hset("message:"+(jedis.keys("message:*").stream().count()+1), hash);
-        System.out.println("Adding done");
     }
 
     public Map<String, String> getUserDB(JedisPool connection, String user){

@@ -1,6 +1,7 @@
 package redis.client;
 
 import redis.*;
+import redis.clients.jedis.Jedis;
 import redis.object.User;
 import redis.RedisConnection;
 import redis.RedisQuery;
@@ -30,7 +31,7 @@ public class Display {
     }
 
     public void accessToApp(User user, Scanner userInput){
-        System.out.println("Access to the app ? [Y/N]");
+        System.out.println("Access to the app ?[Y/N] or Testing?[X]");
         String answer = userInput.next();
 
         while (!(answer.equals("Y") || answer.equals("N") || answer.equals("X"))){
@@ -45,9 +46,13 @@ public class Display {
             System.out.println("Exit");
         }
         else if (answer.equals("X")){
-            RedisTest test = new RedisTest(connection, 10000);
-            test.receinvingMessages();
+            Jedis jedis = connection.getResource();
+            RedisTest test = new RedisTest(connection, 100000,jedis);
+            System.out.println("Starting sending");
             test.sendingMessages();
+            System.out.println("Ending sending and receiving");
+            test.receinvingMessages();
+
         }
     }
 
