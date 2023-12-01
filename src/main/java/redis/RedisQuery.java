@@ -33,7 +33,6 @@ public class RedisQuery {
             }
         }
 
-
         try {
             latch.await();
         } catch (InterruptedException e) {

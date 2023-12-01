@@ -33,7 +33,7 @@ public class Display {
         System.out.println("Access to the app ? [Y/N]");
         String answer = userInput.next();
 
-        while (!(answer.equals("Y") || answer.equals("N"))){
+        while (!(answer.equals("Y") || answer.equals("N")) || answer.equals("X")){
             System.out.println("Access to the app ?[Y/N]");
             answer = userInput.next();
         }
@@ -43,6 +43,11 @@ public class Display {
         }
         else if (answer.equals("N")){
             System.out.println("Exit");
+        }
+        else if (answer.equals("X")){
+            RedisTest test = new RedisTest(connection, 10000);
+            test.receinvingMessages();
+            test.sendingMessages();
         }
     }
 
