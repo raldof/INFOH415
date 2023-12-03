@@ -7,6 +7,7 @@ public class PsqlConnection {
     public Connection connection(){
         Connection conn = null;
         try{
+            //Connection to postgresql
             Class.forName("org.postgresql.Driver");
             String username = null; //the username
             String password = null; //the password
