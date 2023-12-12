@@ -37,8 +37,10 @@ public class Panel extends JPanel {
         this.sendButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                System.out.println("click");
                 if(textField.getText().length()>1) {
-                    query.setMessasgeDB(connection,textField.getText(),user,LocalDateTime.now(),null);
+                    query.setMessasgeDB(connection,textField.getText(),user,LocalDateTime.now());
+                    System.out.println("adding done");
                     textField.setText("");
                 }
             }
@@ -54,7 +56,6 @@ public class Panel extends JPanel {
         g.fillRect(100,50,1080,650);
         g.setFont(new Font("Arial",Font.PLAIN,20));
         if(messagesToPrint.length>0){
-            System.out.println("we are printing");
             Message[] tmpMessage=messagesToPrint;
             for(int i = tmpMessage.length-1;i>=0;i--){
                 g.setColor(new Color(tmpMessage[i].getUser().getR(),tmpMessage[i].getUser().getG(),tmpMessage[i].getUser().getB()));

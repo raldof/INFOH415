@@ -31,12 +31,11 @@ public class Frame extends JFrame {
     public void startGui(){
         this.setVisible(true);
         receiveMessage();
-        Thread th = new Thread(t);
+        Thread th = new Thread(this.t);
         th.start();
 
     }
     public void receiveMessage(){
-        System.out.println("received");
         Message[] messages = redisQuery.receiveMesage(connection, user);
         if(messages.length>31){
             messages= Arrays.copyOfRange(messages,messages.length-32,messages.length);
@@ -57,6 +56,7 @@ class ReceiverThread implements Runnable{
     @Override
     public void run() {
         while(running){
+            System.out.println("here");
             listener.receiveMessage();
             try {
                 Thread.sleep(10);
