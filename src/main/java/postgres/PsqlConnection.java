@@ -2,6 +2,7 @@ package postgres;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 public class PsqlConnection {
     public Connection connection(){
@@ -9,8 +10,8 @@ public class PsqlConnection {
         try{
             //Connection to postgresql
             Class.forName("org.postgresql.Driver");
-            String username = null; //the username
-            String password = null; //the password
+            String username = "postgres"; //the username
+            String password = "arek"; //the password
             conn = DriverManager.getConnection("jdbc:postgresql://localhost:5432/livechat",username ,password);
             if(conn != null){
                 System.out.println("Connection established");
@@ -23,6 +24,10 @@ public class PsqlConnection {
         }
 
         return conn;
+    }
+
+    public void closeConnection(Connection conn) throws SQLException {
+        conn.close();
     }
 
 }

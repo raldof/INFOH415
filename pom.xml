@@ -18,7 +18,7 @@
         <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
-            <version>5.0.0-alpha2</version>
+            <version>5.1.0</version>
         </dependency>
         <dependency>
             <groupId> org.apache.cassandra</groupId>
@@ -50,6 +50,11 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.6.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.knowm.xchart</groupId>
+            <artifactId>xchart</artifactId>
+            <version>3.8.0</version>
         </dependency>
     </dependencies>
 
