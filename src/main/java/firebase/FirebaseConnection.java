@@ -367,6 +367,9 @@ public class FirebaseConnection {
                 messages.set(i, localisationMap.get(listMess.get(i)));
             }
         }
+        Collections.sort(messages, (m1, m2) -> m1.getDate().compareTo(m2.getDate()));
+
+
 
         latch.countDown();
         return messages.toArray(arr);
