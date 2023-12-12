@@ -54,6 +54,7 @@ public class FirebaseConnection {
         int result[] = {0};
         final boolean[] userExists = {false};
         List<String>  listofString = null;
+        latch = new CountDownLatch(1);
 
 
         DatabaseReference usersRef = ref.child("Users");
@@ -80,10 +81,9 @@ public class FirebaseConnection {
                         }
 
                     }
-                    latch.countDown();
                 } else {
                     result[0] = 2;
-                }latch.countDown();
+                }
                 if (!userExists[0]){
                     System.out.println("Creating a new account");
                     result[0] = 2;
@@ -96,7 +96,8 @@ public class FirebaseConnection {
                             System.out.println("Data saved successfully.");
                         }
                     });
-                }latch.countDown();
+                }
+                latch.countDown();
             }
 
             @Override
@@ -145,6 +146,7 @@ public class FirebaseConnection {
 
     public void closeChatRoom(){
         DatabaseReference childReferenceToDelete = ref.child("ChatRoomParticipent");
+
         childReferenceToDelete.removeValue(new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
@@ -191,6 +193,29 @@ public class FirebaseConnection {
         }
     }
 
+
+    public void deleteUsers(){
+        latch = new CountDownLatch(1);
+        DatabaseReference childReferenceToDelete2 = ref.child("Users");
+        childReferenceToDelete2.removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                if (databaseError != null) {
+                    System.out.println("Échec de la suppression du nœud : " + databaseError.getMessage());
+                } else {
+                    System.out.println("Nœud supprimé avec succès.");
+                }
+                latch.countDown();
+            }
+        });
+
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void joinChatRoom(User user){
         DatabaseReference dbRef =  ref.child("ChatRoomParticipent");
         HashMap<String, Object> h = new HashMap<>();
@@ -203,6 +228,44 @@ public class FirebaseConnection {
             }
         });
     }
+
+
+    public void insertUserLatex(){
+        latch = new CountDownLatch(1);
+        DatabaseReference dbRef = ref.child("users").child("user1");
+        dbRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                System.out.println("Creating a new account");
+                Map<String, Object> users = new HashMap<>();
+                users.put("name", "nabil");
+                users.put("country", "belgium");
+                dbRef.updateChildren(users, (error, ref1) -> {
+                    if (error != null) {
+                        System.out.println("Data could not be saved " + error.getMessage());
+                    } else {
+                        System.out.println("Data saved successfully.");
+                    }
+                    latch.countDown();
+                });
+
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("Erreur lors de la vérification de l'existence du nœud : " + databaseError.getMessage());
+            }
+        });
+
+        try {
+            latch.await();
+
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        }
+
+
+
 
     public void sendMessage(Message message){
 

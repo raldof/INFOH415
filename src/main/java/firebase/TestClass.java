@@ -7,6 +7,10 @@ import firebase.object.User;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import org.knowm.xchart.QuickChart;
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.XYChart;
+
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -104,6 +108,36 @@ public class TestClass {
 
         Display.firebaseConnection.deleteChatRoom();
 
+
+    }
+
+    public void createUsers(int numUsers){
+        Display.firebaseConnection.deleteUsers();
+
+        double[] xData = new double[numUsers];
+        double[] yData = new double[numUsers];
+
+        for (int i = 0; i < numUsers; i++){
+            xData[i] = i;
+            String a = String.valueOf(i);
+            Display display  = new Display();
+
+            double startTime = System.currentTimeMillis();
+
+
+            display.auth("User"+a, "Password"+a);
+
+            double endTime = System.currentTimeMillis() - startTime;
+            yData[i] = endTime;
+        }
+        yData[0] = yData[1];
+        XYChart chart = QuickChart.getChart("Time taken with the insertion", "Number of Users inserted", "Time (ms)", "Data", xData, yData);
+        new SwingWrapper<>(chart).displayChart();
+
+    }
+
+    public void insertUserLatex(){
+        Display.firebaseConnection.insertUserLatex();
 
     }
 

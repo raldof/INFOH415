@@ -49,6 +49,8 @@ public class Display {
         return 2; // default value because not DB
     }
 
+
+
     public void createSession(User user){
         if (firebaseConnection.isChatRoomOpen()){
             firebaseConnection.joinChatRoom(user);

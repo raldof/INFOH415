@@ -9,11 +9,9 @@ import java.time.temporal.ChronoUnit;
 public class Main {
     public static void main(String[] args) {
 
-        //Display dis = new Display();
-        //dis.connexion();
+        Display dis = new Display();
+        dis.connexion();
 
-        TestClass testClass = new TestClass();
-        testClass.sendTimeComparaisonTest();
 
 
 
